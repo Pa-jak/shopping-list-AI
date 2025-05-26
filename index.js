@@ -22,9 +22,13 @@ app.post('/kategoria', async (req, res) => {
       messages: [
         {
           role: 'system',
-          content: 'Przypisuj produkty do kategorii: Owoce, Warzywa, Nabiał, Mięso, Pieczywo, Chemia, Mrożonki, Inne. Zwróć tylko nazwę kategorii.',
+          content:
+            'Przypisuj produkty spożywcze do jednej z kategorii: Owoce, Warzywa, Nabiał, Mięso, Pieczywo, Chemia, Mrożonki, Inne. Zwróć tylko nazwę kategorii.',
         },
-        { role: 'user', content: produkt }
+        {
+          role: 'user',
+          content: produkt,
+        }
       ],
       temperature: 0,
     });
@@ -33,8 +37,8 @@ app.post('/kategoria', async (req, res) => {
     res.json({ kategoria });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Błąd AI' });
+    console.error('Błąd:', err);
+    res.status(500).json({ error: 'Wystąpił błąd podczas uzyskiwania kategorii.' });
   }
 });
 
