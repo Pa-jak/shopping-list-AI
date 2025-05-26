@@ -15,6 +15,7 @@ const openai = new OpenAI({
 
 app.post('/kategoria', async (req, res) => {
   const { produkt } = req.body;
+   console.log('Otrzymano produkt:', produkt);
 
   try {
     const response = await openai.chat.completions.create({
