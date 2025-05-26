@@ -23,7 +23,7 @@ app.post('/kategoria', async (req, res) => {
         {
           role: 'system',
           content:
-            'Przypisuj produkty spożywcze do jednej z kategorii: Owoce, Warzywa, Nabiał, Mięso, Pieczywo, Chemia, Mrożonki, Inne. Zwróć tylko nazwę kategorii.',
+            'dostajesz nazwę produktu, twoim zadaniem jest przyporządkować go do kategorii która pojawi się na liście zakupów. Zwróć tylko nazwę kategorii.',
         },
         {
           role: 'user',
