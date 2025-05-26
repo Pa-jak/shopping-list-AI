@@ -1,5 +1,5 @@
 {
-  "name": "openai-kategoryzator",
+  "name": "openai-backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
