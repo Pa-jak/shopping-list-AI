@@ -1,9 +1,8 @@
-
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const { OpenAI } = require('openai');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -80,12 +79,12 @@ app.post('/lista/:id/wyczysc', async (req, res) => {
   res.json(lista.items);
 });
 
-// 🧠 (Opcjonalnie) kategoryzacja przez OpenAI
-const { OpenAI } = require('openai');
+// 🧠 Kategoryzacja przez OpenAI
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 app.post('/kategoria', async (req, res) => {
   const { produkt } = req.body;
+  console.log('Otrzymano produkt:', produkt);
 
   try {
     const response = await openai.chat.completions.create({
@@ -93,7 +92,7 @@ app.post('/kategoria', async (req, res) => {
       messages: [
         {
           role: 'system',
-          content: `Przypisz produkt do jednej z kategorii: Owoce, Warzywa, Nabiał, Mięso, Pieczywo, Chemia, Mrożonki, Inne. Odpowiedz tylko nazwą kategorii.`
+          content: 'Przypisz produkt do jednej z kategorii: Owoce, Warzywa, Nabiał, Mięso, Pieczywo, Chemia, Mrożonki, Inne. Odpowiedz tylko nazwą kategorii.'
         },
         { role: 'user', content: produkt }
       ],
@@ -104,62 +103,12 @@ app.post('/kategoria', async (req, res) => {
     res.json({ kategoria });
 
   } catch (err) {
-    console.error("❌ Błąd kategorii:", err);
-    res.status(500).json({ error: "Nie udało się uzyskać kategorii." });
+    console.error('❌ Błąd kategorii:', err);
+    res.status(500).json({ error: 'Wystąpił błąd podczas uzyskiwania kategorii.' });
   }
 });
 
 // 🔄 Start serwera
 app.listen(PORT, () => {
   console.log(`🚀 Serwer działa na porcie ${PORT}`);
-});
-
-
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const { OpenAI } = require('openai');
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.use(cors());
-app.use(express.json());
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-app.post('/kategoria', async (req, res) => {
-  const { produkt } = req.body;
-   console.log('Otrzymano produkt:', produkt);
-
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4-turbo',
-      messages: [
-        {
-          role: 'system',
-          content:
-            'dostajesz nazwę produktu, twoim zadaniem jest przyporządkować go do kategorii która pojawi się na liście zakupów. Zwróć tylko nazwę kategorii.',
-        },
-        {
-          role: 'user',
-          content: produkt,
-        }
-      ],
-      temperature: 0,
-    });
-
-    const kategoria = response.choices[0].message.content.trim();
-    res.json({ kategoria });
-
-  } catch (err) {
-    console.error('Błąd:', err);
-    res.status(500).json({ error: 'Wystąpił błąd podczas uzyskiwania kategorii.' });
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`Serwer działa na porcie ${PORT}`);
 });
