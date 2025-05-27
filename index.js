@@ -7,7 +7,9 @@ const { OpenAI } = require('openai');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(cors({
+  origin: ['https://pa-jak.github.io']
+}));
 app.use(express.json());
 
 // 🔗 Połączenie z MongoDB
