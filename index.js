@@ -7,9 +7,11 @@ const { OpenAI } = require('openai');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ✅ Zezwolenie na dostęp z GitHub Pages
 app.use(cors({
   origin: ['https://pa-jak.github.io']
 }));
+
 app.use(express.json());
 
 // 🔗 Połączenie z MongoDB
@@ -108,6 +110,11 @@ app.post('/kategoria', async (req, res) => {
     console.error('❌ Błąd kategorii:', err);
     res.status(500).json({ error: 'Wystąpił błąd podczas uzyskiwania kategorii.' });
   }
+});
+
+// ✅ Endpoint testowy dla GET /
+app.get('/', (req, res) => {
+  res.send('✅ API działa. Gotowe do obsługi list zakupów.');
 });
 
 // 🔄 Start serwera
